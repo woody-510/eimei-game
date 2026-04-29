@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>入り口</title>
+
+    <style>
+        /* =========================================
+           基本設定 (ここからはデザインのプログラムです)
+           ========================================= */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #030000;
+            /* 真っ黒に近い背景 */
+            color: #8c0000;
+            /* 暗めの赤色テキスト */
+            /* ホラー感を出すために明朝体を指定しています */
+            font-family: "遊明朝", YuMincho, "ヒラギノ明朝 ProN W3", "Hiragino Mincho ProN", "MS P明朝", "MS PMincho", serif;
+            overflow-x: hidden;
+        }
+
+        /* 画面中央に配置させるためのスタイル */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 2;
+            /* ノイズエフェクトの上に配置 */
+        }
+
+        /* =========================================
+           タイトル文字のデザイン
+           ========================================= */
+        .title {
+            font-size: 3rem;
+            color: #aa0000;
+            /* 少し明るい赤 */
+            text-shadow: 2px 2px 10px rgba(255, 0, 0, 0.4);
+            /* 文字が滲むような影 */
+            margin-bottom: 40px;
+            text-align: center;
+            letter-spacing: 0.3em;
+            /* 文字と文字の間隔を少し開ける */
+        }
+
+        /* =========================================
+           注意書きを囲む枠のデザイン
+           ========================================= */
+        .warning-box {
+            border: 1px solid #5a0000;
+            /* 暗赤色の枠線 */
+            background-color: rgba(15, 0, 0, 0.7);
+            /* 半透明の黒赤背景 */
+            padding: 40px;
+            margin-bottom: 60px;
+            max-width: 650px;
+            width: 100%;
+            box-shadow: 0 0 20px rgba(100, 0, 0, 0.3) inset;
+            /* 内側に向かって暗い影 */
+            position: relative;
+        }
+
+        /* 枠の四隅につける飾りの線（さらにホラーっぽく！） */
+        .warning-box::before,
+        .warning-box::after {
+            content: "";
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border: 1px solid #ff0000;
+        }
+
+        .warning-box::before {
+            top: 5px;
+            left: 5px;
+            border-bottom: none;
+            border-right: none;
+        }
+
+        .warning-box::after {
+            bottom: 5px;
+            right: 5px;
+            border-top: none;
+            border-left: none;
+        }
+
+        .warning-title {
+            color: #ff3333;
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #5a0000;
+            /* 点線 */
+            letter-spacing: 0.2em;
+        }
+
+        /* =========================================
+           注意書きの文章部分のデザイン
+           ========================================= */
+        .warning-text {
+            color: #d00000;
+            /* 読みやすいように少し明るめの赤 */
+            font-size: 1.1rem;
+            line-height: 2.0;
+            /* 行間を広めにとる */
+            white-space: pre-line;
+            /* HTMLタグなしで改行を反映させます */
+            text-align: center;
+        }
+
+        /* =========================================
+           パスワード入力欄とボタンのデザイン (新規追加)
+           ========================================= */
+        .password-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .pass-input {
+            background-color: rgba(10, 0, 0, 0.8);
+            border: 1px solid #5a0000;
+            color: #ff3333;
+            padding: 15px;
+            font-size: 1.2rem;
+            text-align: center;
+            width: 250px;
+            font-family: inherit; /* ホラーフォントを継承 */
+            outline: none;
+            box-shadow: 0 0 10px rgba(100, 0, 0, 0.5) inset;
+            letter-spacing: 0.2em;
+        }
+
+        .pass-input:focus {
+            border-color: #ff0000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.8) inset;
+        }
+
+        .error-message {
+            color: #ff0000;
+            font-size: 1rem;
+            min-height: 1.5rem; /* エラーがない時も高さを保つ */
+            text-shadow: 0 0 5px #ff0000;
+            letter-spacing: 0.1em;
+            text-align: center;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background-color: rgba(20, 0, 0, 0.8);
+            color: #cc0000;
+            border: 1px solid #770000;
+            padding: 15px 50px;
+            font-size: 1.4rem;
+            text-decoration: none;
+            /* 下線を消す */
+            transition: all 0.4s ease;
+            /* ホバー時のアニメーション時間を指定 */
+            cursor: pointer;
+            letter-spacing: 0.15em;
+            font-family: inherit;
+        }
+
+        /* マウスを乗せた(ホバーした)ときのアクション */
+        .download-btn:hover {
+            background-color: #330000;
+            color: #ff0000;
+            border-color: #ff0000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.8), 0 0 30px rgba(255, 0, 0, 0.4) inset;
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.8);
+        }
+
+        /* =========================================
+           CRTモニター風のノイズエフェクト（おまけ）
+           ========================================= */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* うっすらと横線を入れる */
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            /* クリックの邪魔にならないようにする */
+            z-index: 1;
+            opacity: 0.5;
+        }
+
+        /* 点滅させるアニメーションの設定 */
+        @keyframes flicker {
+            0% { opacity: 0.9; }
+            5% { opacity: 0.5; }
+            10% { opacity: 0.9; }
+            15% { opacity: 1.0; }
+            50% { opacity: 0.8; }
+            55% { opacity: 0.9; }
+            60% { opacity: 0.6; }
+            65% { opacity: 1.0; }
+            100% { opacity: 0.9; }
+        }
+
+        /* このクラスを付けた要素はチカチカ点滅します */
+        .flicker-text {
+            animation: flicker 5s infinite alternate;
+        }
+
+        /* =========================================
+           本物の注意書き（免責事項等の）デザイン
+           ========================================= */
+        .real-disclaimer {
+            margin-top: 80px;
+            color: #777777;
+            /* 目立たないグレー */
+            font-size: 0.8rem;
+            /* 小さい文字 */
+            text-align: center;
+            line-height: 1.6;
+            font-family: "メイリオ", Meiryo, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", sans-serif;
+            /* 真面目な文章なのでゴシック体 */
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="scanlines"></div>
+
+    <div class="container">
+
+        <h1 class="title flicker-text">ここはダウンロードページです</h1>
+
+        <div class="warning-box">
+            <h2 class="warning-title">「 注意事項 」</h2>
+
+            <div class="warning-text">
+                <h3>このゲームには過激な恐怖表現や、
+                    精神的な不安を煽る演出が含まれています。
+
+                    心臓の弱い方、霊感の強い方の
+                    プレイは推奨されません。
+
+                    また、プレイ中の心霊現象やその他のトラブルに関して、
+                    我々は一切の責任を負いません。
+
+                    それでも、足を踏み入れますか？</h3>
+            </div>
+        </div>
+
+        <div class="password-section">
+            <input type="password" id="game-password" class="pass-input" placeholder="合言葉...">
+            <button onclick="checkPassword()" class="download-btn">
+                扉を開く
+            </button>
+            <div id="error-msg" class="error-message"></div>
+        </div>
+
+        <script>
+            function checkPassword() {
+                const passInput = document.getElementById('game-password').value;
+                const errorMsg = document.getElementById('error-msg');
+                
+                // 【編集箇所1】ここに設定したいパスワードを入力してください
+                const correctPassword = "yutaro"; 
+                
+                // 【編集箇所2】ここに正解した時に飛ばすURL（Google Drive）を設定します
+                const driveUrl = "https://drive.google.com/file/d/1uMI7ZonijtGRlUeiD7gFYSVXSgkSgCVR/view?usp=sharing";
+
+                if (passInput === correctPassword) {
+                    errorMsg.style.color = "#cc0000";
+                    errorMsg.innerText = "承認されました。深淵へご案内します...";
+                    // 演出として1秒（1000ミリ秒）待ってからページを移動させます
+                    setTimeout(() => {
+                        window.location.href = driveUrl;
+                    }, 1000);
+                } else {
+                    errorMsg.style.color = "#ff0000";
+                    errorMsg.innerText = "パスワードが違います。拒絶されました。";
+                    document.getElementById('game-password').value = ""; // 入力欄を空に戻す
+                }
+            }
+        </script>
+
+        <div class="real-disclaimer">
+            ※当サイトおよび配布しているゲームはフィクションであり、実在の人物・団体・事件等とは一切関係ありません。<br>
+            ※ゲームのダウンロードおよびプレイによって生じたいかなるトラブル・損害についても、製作者は一切の責任を負いかねます。<br>
+            ※ブラウザのタブを閉じると、ゲームの進捗がリセットされてしまうので注意してください。(二周目は展開が変わります)<br>
+            ※各自のPCのセキュリティ状態をご確認の上、自己責任でのダウンロードをお願いいたします。<br>
+            ※ヘッドホンの着用を推奨します。<br>
+            ※必ずウィンドウを最大化してプレイしてください。<br>
+            ※バグ報告は[yuhasegawawoody@gmail.com]までお願いします。<br>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
